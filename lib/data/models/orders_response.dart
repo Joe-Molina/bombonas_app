@@ -1,12 +1,18 @@
+import 'package:bombonas_app/data/models/orders_detail_response.dart';
+
 class OrdersResponse {
-  final String id;
-  final DateTime date;
-  final String clientId;
+  final int id;
+  final String date;
+  final int clientId;
+  final ClientResponse client;
+  final OrdersDetailResponse orderDetail;
 
   OrdersResponse({
     required this.id,
     required this.date,
     required this.clientId,
+    required this.client,
+    required this.orderDetail,
   });
 
   factory OrdersResponse.fromJson(Map<String, dynamic> json) {
@@ -14,6 +20,8 @@ class OrdersResponse {
       id: json["id"],
       date: json["date"],
       clientId: json["clientId"],
+      client: ClientResponse.fromJson(json["client"]),
+      orderDetail: OrdersDetailResponse.fromJson(json["orderDetail"][0]),
     );
   }
 

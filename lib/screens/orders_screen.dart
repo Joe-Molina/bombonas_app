@@ -17,19 +17,28 @@ class _OrdersScreenState extends State<OrdersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Ordenes")),
+      backgroundColor: const Color.fromARGB(255, 39, 39, 39),
+      appBar: AppBar(
+        title: Text("Ordenes", style: TextStyle(color: Colors.white)),
+        backgroundColor: const Color.fromARGB(255, 27, 27, 27),
+      ),
       body: ordersList(),
     );
   }
 
   FutureBuilder<List<OrdersResponse>> ordersList() {
+    _orders = repository.fetchOrders();
+
     return FutureBuilder(
       future: _orders,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          return Text("Error: ${snapshot.error}");
+          return Text(
+            "Error: ${snapshot.error}",
+            style: TextStyle(color: Colors.white),
+          );
         } else if (snapshot.hasData) {
           var ordersList = snapshot.data;
           return Expanded(
@@ -60,11 +69,30 @@ class _OrdersScreenState extends State<OrdersScreen> {
       ),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: Colors.red,
+          borderRadius: BorderRadius.circular(4),
+          color: const Color.fromARGB(255, 20, 20, 20),
         ),
-        child: Column(children: [Text("client ${order.clientId}")]),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Text(order.client.name, style: TextStyle(color: Colors.white)),
+              Row(children: [cantCilindros("10kg", order.orderDetail.kg10)]),
+            ],
+          ),
+        ),
       ),
     ),
   );
+
+  Container cantCilindros(String kg, int cantidad) {
+    return Container(
+      child: Column(
+        children: [
+          Text(kg, style: TextStyle(color: Colors.white)),
+          Text("$cantidad", style: TextStyle(color: Colors.white)),
+        ],
+      ),
+    );
+  }
 }
