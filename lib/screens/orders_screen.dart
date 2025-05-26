@@ -75,9 +75,14 @@ class _OrdersScreenState extends State<OrdersScreen> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
+            spacing: 10,
             children: [
               Text(order.client.name, style: TextStyle(color: Colors.white)),
               Row(children: [cantCilindros("10kg", order.orderDetail.kg10)]),
+              Row(children: [cantCilindros("18kg", order.orderDetail.kg18)]),
+              Row(children: [cantCilindros("21kg", order.orderDetail.kg21)]),
+              Row(children: [cantCilindros("27kg", order.orderDetail.kg27)]),
+              Row(children: [cantCilindros("43kg", order.orderDetail.kg43)]),
             ],
           ),
         ),
@@ -87,11 +92,18 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
   Container cantCilindros(String kg, int cantidad) {
     return Container(
-      child: Column(
-        children: [
-          Text(kg, style: TextStyle(color: Colors.white)),
-          Text("$cantidad", style: TextStyle(color: Colors.white)),
-        ],
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.white, width: .5),
+        borderRadius: BorderRadius.circular(5.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Column(
+          children: [
+            Text(kg, style: TextStyle(color: Colors.white)),
+            Text("$cantidad", style: TextStyle(color: Colors.white)),
+          ],
+        ),
       ),
     );
   }
