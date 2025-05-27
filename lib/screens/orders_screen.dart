@@ -1,4 +1,5 @@
-import 'package:bombonas_app/components/create_order_form.dart';
+import 'package:bombonas_app/components/app_bar.dart';
+import 'package:bombonas_app/screens/create_order_screen.dart';
 import 'package:bombonas_app/components/date_bar.dart';
 import 'package:bombonas_app/components/order_card.dart';
 import 'package:bombonas_app/data/models/orders_response.dart';
@@ -21,19 +22,17 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 39, 39, 39),
-      appBar: AppBar(
-        title: Text("Ordenes", style: TextStyle(color: Colors.white)),
-        backgroundColor: const Color.fromARGB(255, 27, 27, 27),
-      ),
+      appBar: appBarComponent("Ordenes"),
       body: Column(children: [dateBar(), ordersList(ordenes)]),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.black,
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => CreateOrderScreen()),
           );
         },
-        child: const Icon(Icons.add, color: Colors.black),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
