@@ -1,5 +1,6 @@
 import 'package:bombonas_app/components/app_bar.dart';
 import 'package:bombonas_app/data/models/clients_response.dart';
+import 'package:bombonas_app/data/models/form_post.dart';
 import 'package:bombonas_app/data/repository.dart';
 import 'package:bombonas_app/styles/input_decoration.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
   Future<List<ClientsResponse>> clients = Repository().fetchClients();
   DateTime? _selectedDate;
   int selectedClient = 0;
-
+  FormOrder? formOrderState;
   //form key
   final _formGlobalKey = GlobalKey<FormState>();
 
@@ -86,8 +87,49 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
 
   FilledButton sendInfo() {
     return FilledButton(
-      onPressed: () {
-        _formGlobalKey.currentState!.validate();
+      onPressed: () async {
+        if (_formGlobalKey.currentState!.validate()) {
+          _formGlobalKey.currentState!.save();
+
+          final order = FormOrder(
+            clientId: selectedClient,
+            date: _selectedDate!,
+            orderDetail: OrdersDetailForm(
+              kg10: int.parse(_kg10Controller.text),
+              kg18: int.parse(_kg18Controller.text),
+              kg21: int.parse(_kg21Controller.text),
+              kg27: int.parse(_kg27Controller.text),
+              kg43: int.parse(_kg43Controller.text),
+            ),
+          );
+
+          try {
+            final response = await Repository().createOrder(order);
+
+            // Verificar si el widget está montado antes de cualquier operación con context
+            if (!mounted) return;
+
+            if (response.statusCode == 200) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Orden creada exitosamente')),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Error: ${response.body}')),
+              );
+            }
+          } catch (e) {
+            // Verificar mounted también en el catch
+            if (!mounted) return;
+
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('Error de conexión: $e')));
+          }
+
+          Navigator.pop(context, true);
+          // _formGlobalKey.currentState!.reset(); // esto daba el error de que el context no era válido
+        }
       },
       style: FilledButton.styleFrom(
         backgroundColor: Colors.grey[800],
@@ -166,6 +208,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
         }
         return null;
       },
+      onSaved: (value) {},
     );
   }
 
