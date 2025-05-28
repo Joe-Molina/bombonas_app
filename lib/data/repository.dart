@@ -1,3 +1,4 @@
+import 'package:bombonas_app/data/models/bcv_response.dart';
 import 'package:bombonas_app/data/models/clients_response.dart';
 import 'package:bombonas_app/data/models/form_post.dart';
 import 'package:bombonas_app/data/models/orders_response.dart';
@@ -26,6 +27,20 @@ class Repository {
       final List<dynamic> jsonList = jsonDecode(response.body);
 
       return ClientsResponse.fromJsonList(jsonList);
+    } else {
+      throw Exception('fallo al cargar');
+    }
+  }
+
+  Future<BcvResponse> fetchBcv() async {
+    final response = await http.get(
+      Uri.parse("https://pydolarve.org/api/v1/dollar?page=bcv&monitor=usd"),
+    );
+
+    if (response.statusCode == 200) {
+      var json = jsonDecode(response.body);
+      BcvResponse bcvResponse = BcvResponse.fromJson(json);
+      return bcvResponse;
     } else {
       throw Exception('fallo al cargar');
     }

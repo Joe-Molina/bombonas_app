@@ -1,10 +1,12 @@
+import 'package:bombonas_app/data/models/bcv_response.dart';
 import 'package:bombonas_app/data/models/orders_response.dart';
+import 'package:bombonas_app/data/repository.dart';
 import 'package:bombonas_app/screens/order_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 FutureBuilder<List<OrdersResponse>> ordersList(ordenes) {
-  // _orders = repository.fetchOrders();
+  Future<BcvResponse> bcv = Repository().fetchBcv();
 
   return FutureBuilder(
     future: ordenes,
@@ -19,13 +21,34 @@ FutureBuilder<List<OrdersResponse>> ordersList(ordenes) {
       } else if (snapshot.hasData) {
         var ordersList = snapshot.data;
         return Expanded(
-          child: ListView.builder(
-            itemCount: ordersList?.length,
-            itemBuilder: (context, index) {
-              if (ordersList != null) {
-                return orderCard(ordersList[index], context);
+          child: FutureBuilder(
+            future: bcv,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text(
+                  "Error: ${snapshot.error}",
+                  style: TextStyle(color: Colors.white),
+                );
+              } else if (snapshot.hasData) {
+                // print("BCV: ${snapshot.data!.price}");
+                return ListView.builder(
+                  itemCount: ordersList?.length,
+                  itemBuilder: (context, index) {
+                    if (ordersList != null) {
+                      return orderCard(
+                        ordersList[index],
+                        snapshot.data!.price,
+                        context,
+                      );
+                    } else {
+                      return Text("Error");
+                    }
+                  },
+                );
               } else {
-                return Text("Error");
+                return Text("no hay resultados");
               }
             },
           ),
@@ -37,7 +60,7 @@ FutureBuilder<List<OrdersResponse>> ordersList(ordenes) {
   );
 }
 
-Padding orderCard(OrdersResponse order, context) => Padding(
+Padding orderCard(OrdersResponse order, double bcv, context) => Padding(
   padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
   child: GestureDetector(
     onTap: () => Navigator.push(
@@ -77,6 +100,15 @@ Padding orderCard(OrdersResponse order, context) => Padding(
                 Row(children: [cantCilindros("21kg", order.orderDetail.kg21)]),
                 Row(children: [cantCilindros("27kg", order.orderDetail.kg27)]),
                 Row(children: [cantCilindros("43kg", order.orderDetail.kg43)]),
+              ],
+            ),
+            Row(
+              children: [
+                Text(
+                  "bcv ${bcv.toStringAsFixed(2)}",
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                ),
+                Spacer(),
               ],
             ),
           ],

@@ -44,17 +44,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
       body: Column(children: [dateBar(), ordersList(_orders)]),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.black,
-        onPressed: () async {
-          final bool? orderAdded = await Navigator.push(
+        onPressed: () {
+          Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => CreateOrderScreen()),
           );
-
-          if (orderAdded == true) {
-            print('Una nueva orden fue agregada, recargando la lista.');
-            // Llama a la función para recargar tus órdenes
-            _fetchOrders(); // Tu método para obtener las órdenes actualizadas
-          }
         },
         child: const Icon(Icons.add, color: Colors.white),
       ),
