@@ -5,7 +5,8 @@ import 'package:bombonas_app/screens/order_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-FutureBuilder<List<OrdersResponse>> ordersList(ordenes) {
+//unUsed
+FutureBuilder<List<OrdersResponse>> ordersList(ordenes, ordenesCargadas) {
   Future<BcvResponse> bcv = Repository().fetchBcv();
 
   return FutureBuilder(
@@ -19,7 +20,7 @@ FutureBuilder<List<OrdersResponse>> ordersList(ordenes) {
           style: TextStyle(color: Colors.white),
         );
       } else if (snapshot.hasData) {
-        var ordersList = snapshot.data;
+        // var ordersList = snapshot.data;
         return Expanded(
           child: FutureBuilder(
             future: bcv,
@@ -34,11 +35,11 @@ FutureBuilder<List<OrdersResponse>> ordersList(ordenes) {
               } else if (snapshot.hasData) {
                 // print("BCV: ${snapshot.data!.price}");
                 return ListView.builder(
-                  itemCount: ordersList?.length,
+                  itemCount: ordenesCargadas.length,
                   itemBuilder: (context, index) {
-                    if (ordersList != null) {
+                    if (ordenesCargadas != null) {
                       return orderCard(
-                        ordersList[index],
+                        ordenesCargadas[index],
                         snapshot.data!.price,
                         context,
                       );
@@ -81,34 +82,67 @@ Padding orderCard(OrdersResponse order, double bcv, context) => Padding(
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(order.client.name, style: TextStyle(color: Colors.white)),
-                Column(
-                  children: [
-                    Text(
-                      DateFormat('dd/MM/yy').format(DateTime.parse(order.date)),
-                      style: TextStyle(fontSize: 12, color: Colors.white),
+                Container(
+                  decoration: BoxDecoration(
+                    // border: Border.all(color: Colors.white, width: .5)
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: Colors.black,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 2,
+                      bottom: 2,
+                      left: 12,
+                      right: 12,
                     ),
+                    child: Row(
+                      spacing: 10,
+                      children: [
+                        Text(
+                          order.client.name,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Text(
+                          DateFormat(
+                            'dd/MM/yy',
+                          ).format(DateTime.parse(order.date)),
+                          style: TextStyle(fontSize: 12, color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Text(
+                  "${((order.orderDetail.kg10 * 5.5) + (order.orderDetail.kg18 * 11) + (order.orderDetail.kg21 * 13) + (order.orderDetail.kg27 * 16) + (order.orderDetail.kg43 * 24))}\$ / ${(((order.orderDetail.kg10 * 5.5) + (order.orderDetail.kg18 * 11) + (order.orderDetail.kg21 * 13) + (order.orderDetail.kg27 * 16) + (order.orderDetail.kg43 * 24)) * bcv).toStringAsFixed(2)} Bs.",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              spacing: 10,
+              children: [
+                Row(
+                  children: [
+                    cantCilindros("10kg", order.orderDetail.kg10, 5.5),
                   ],
                 ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Row(children: [cantCilindros("10kg", order.orderDetail.kg10)]),
-                Row(children: [cantCilindros("18kg", order.orderDetail.kg18)]),
-                Row(children: [cantCilindros("21kg", order.orderDetail.kg21)]),
-                Row(children: [cantCilindros("27kg", order.orderDetail.kg27)]),
-                Row(children: [cantCilindros("43kg", order.orderDetail.kg43)]),
-              ],
-            ),
-            Row(
-              children: [
-                Text(
-                  "bcv ${bcv.toStringAsFixed(2)}",
-                  style: TextStyle(color: Colors.white, fontSize: 12),
+                Row(
+                  children: [cantCilindros("18kg", order.orderDetail.kg18, 11)],
                 ),
-                Spacer(),
+                Row(
+                  children: [cantCilindros("21kg", order.orderDetail.kg21, 13)],
+                ),
+                Row(
+                  children: [cantCilindros("27kg", order.orderDetail.kg27, 16)],
+                ),
+                Row(
+                  children: [cantCilindros("43kg", order.orderDetail.kg43, 24)],
+                ),
               ],
             ),
           ],
@@ -118,20 +152,35 @@ Padding orderCard(OrdersResponse order, double bcv, context) => Padding(
   ),
 );
 
-Container cantCilindros(String kg, int cantidad) {
+Container cantCilindros(String kg, int cantidad, double precio) {
   return Container(
     decoration: BoxDecoration(
-      border: Border.all(color: Colors.white, width: .5),
+      // border: Border.all(color: Colors.white, width: .5)
       borderRadius: BorderRadius.circular(5.0),
+      color: Colors.grey[900],
     ),
     child: Padding(
       padding: const EdgeInsets.all(4.0),
       child: Column(
         children: [
           Text(kg, style: TextStyle(color: Colors.white)),
-          Text("$cantidad", style: TextStyle(color: Colors.white)),
+          Text(
+            "$cantidad ${cantidad * precio > 0 ? "/ ${formatDouble(cantidad * precio)}\$" : ""}",
+            style: TextStyle(color: Colors.white),
+          ),
+          // Text("", style: TextStyle(color: Colors.white)),
         ],
       ),
     ),
   );
+}
+
+String formatDouble(double value) {
+  if (value % 1 == 0) {
+    // Si no tiene decimales (ej. 10.0, 5.0), lo convertimos a entero
+    return value.toInt().toString();
+  } else {
+    // Si tiene decimales (ej. 10.5, 5.25), lo mostramos tal cual
+    return value.toString();
+  }
 }
