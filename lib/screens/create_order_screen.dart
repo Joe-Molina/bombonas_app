@@ -7,14 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class CreateOrderScreen extends StatefulWidget {
-  const CreateOrderScreen({super.key});
+  final List<ClientsResponse> clients;
+
+  const CreateOrderScreen({super.key, required this.clients});
 
   @override
   State<CreateOrderScreen> createState() => _CreateOrderScreenState();
 }
 
 class _CreateOrderScreenState extends State<CreateOrderScreen> {
-  Future<List<ClientsResponse>> clients = Repository().fetchClients();
+  List<ClientsResponse> _clients = [];
   DateTime? _selectedDate;
   int selectedClient = 0;
   FormOrder? formOrderState;
@@ -27,6 +29,13 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
   final TextEditingController _kg21Controller = TextEditingController();
   final TextEditingController _kg27Controller = TextEditingController();
   final TextEditingController _kg43Controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // 1. Accede a las props iniciales desde 'widget' en initState
+    _clients = widget.clients;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,6 +122,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Orden creada exitosamente')),
               );
+              Navigator.pop(context, true);
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Error: ${response.body}')),
@@ -126,9 +136,6 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
               context,
             ).showSnackBar(SnackBar(content: Text('Error de conexión: $e')));
           }
-
-          Navigator.pop(context, true);
-          // _formGlobalKey.currentState!.reset(); // esto daba el error de que el context no era válido
         }
       },
       style: FilledButton.styleFrom(
@@ -139,57 +146,37 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
     );
   }
 
-  FutureBuilder<List<ClientsResponse>> selectClient() {
-    return FutureBuilder<List<ClientsResponse>>(
-      future: clients,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text(
-            'Error: ${snapshot.error}',
-            style: const TextStyle(color: Colors.red),
-          );
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Text(
-            'No hay órdenes disponibles',
-            style: TextStyle(color: Colors.white),
-          );
-        }
-        // ClientsResponse selectedClient = snapshot.data![0];
+  DropdownButtonFormField<ClientsResponse> selectClient() {
+    return DropdownButtonFormField<ClientsResponse>(
+      // value: selectedClient,
+      dropdownColor: Colors.grey[800],
+      decoration: InputDecoration(
+        labelText: 'Selecciona un cliente',
+        labelStyle: const TextStyle(color: Colors.white),
+        filled: true,
+        fillColor: Colors.grey[800],
 
-        return DropdownButtonFormField<ClientsResponse>(
-          // value: selectedClient,
-          dropdownColor: Colors.grey[800],
-          decoration: InputDecoration(
-            labelText: 'Selecciona un cliente',
-            labelStyle: const TextStyle(color: Colors.white),
-            filled: true,
-            fillColor: Colors.grey[800],
-
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(4),
-              borderSide: BorderSide.none,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(4),
+          borderSide: BorderSide.none,
+        ),
+        focusColor: Colors.black,
+      ),
+      items: _clients
+          .map(
+            (client) => DropdownMenuItem<ClientsResponse>(
+              value: client,
+              child: Text(
+                client.name,
+                style: const TextStyle(color: Colors.white),
+              ),
             ),
-            focusColor: Colors.black,
-          ),
-          items: snapshot.data!
-              .map(
-                (client) => DropdownMenuItem<ClientsResponse>(
-                  value: client,
-                  child: Text(
-                    client.name,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-              )
-              .toList(),
-          onChanged: (ClientsResponse? value) {
-            setState(() {
-              selectedClient = value!.id;
-            });
-          },
-        );
+          )
+          .toList(),
+      onChanged: (ClientsResponse? value) {
+        setState(() {
+          selectedClient = value!.id;
+        });
       },
     );
   }

@@ -1,14 +1,10 @@
-import 'package:bombonas_app/data/models/bcv_response.dart';
 import 'package:bombonas_app/data/models/orders_response.dart';
-import 'package:bombonas_app/data/repository.dart';
 import 'package:bombonas_app/screens/order_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 //unUsed
-FutureBuilder<List<OrdersResponse>> ordersList(ordenes, ordenesCargadas) {
-  Future<BcvResponse> bcv = Repository().fetchBcv();
-
+FutureBuilder<List<OrdersResponse>> ordersList(ordenes, ordenesCargadas, bcv) {
   return FutureBuilder(
     future: ordenes,
     builder: (context, snapshot) {
@@ -22,34 +18,13 @@ FutureBuilder<List<OrdersResponse>> ordersList(ordenes, ordenesCargadas) {
       } else if (snapshot.hasData) {
         // var ordersList = snapshot.data;
         return Expanded(
-          child: FutureBuilder(
-            future: bcv,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text(
-                  "Error: ${snapshot.error}",
-                  style: TextStyle(color: Colors.white),
-                );
-              } else if (snapshot.hasData) {
-                // print("BCV: ${snapshot.data!.price}");
-                return ListView.builder(
-                  itemCount: ordenesCargadas.length,
-                  itemBuilder: (context, index) {
-                    if (ordenesCargadas != null) {
-                      return orderCard(
-                        ordenesCargadas[index],
-                        snapshot.data!.price,
-                        context,
-                      );
-                    } else {
-                      return Text("Error");
-                    }
-                  },
-                );
+          child: ListView.builder(
+            itemCount: ordenesCargadas.length,
+            itemBuilder: (context, index) {
+              if (ordenesCargadas != null) {
+                return orderCard(ordenesCargadas[index], bcv, context);
               } else {
-                return Text("no hay resultados");
+                return Text("Error");
               }
             },
           ),
