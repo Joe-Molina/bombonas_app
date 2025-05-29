@@ -2,7 +2,6 @@ import 'package:bombonas_app/components/app_bar.dart';
 import 'package:bombonas_app/data/models/bcv_response.dart';
 import 'package:bombonas_app/data/models/clients_response.dart';
 import 'package:bombonas_app/data/models/form_post.dart';
-import 'package:bombonas_app/data/models/orders_detail_response.dart';
 import 'package:bombonas_app/screens/create_order_screen.dart';
 import 'package:bombonas_app/components/order_card.dart';
 import 'package:bombonas_app/data/models/orders_response.dart';
@@ -263,7 +262,7 @@ class ResumeCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4),
-          color: const Color.fromARGB(255, 20, 20, 20),
+          color: const Color.fromARGB(255, 0, 0, 0),
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -278,7 +277,7 @@ class ResumeCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       // border: Border.all(color: Colors.white, width: .5)
                       borderRadius: BorderRadius.circular(10.0),
-                      color: Colors.black,
+                      color: const Color.fromARGB(255, 87, 47, 47),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -303,7 +302,7 @@ class ResumeCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        "Recibidos: ${((total.kg10 * 5.5) + (total.kg18 * 11) + (total.kg21 * 13) + (total.kg27 * 16) + (total.kg43 * 24))}\$ / ${(((total.kg10 * 5.5) + (total.kg18 * 11) + (total.kg21 * 13) + (total.kg27 * 16) + (total.kg43 * 24)) * bcv).toStringAsFixed(2)} Bs.",
+                        "Recibido: ${((total.kg10 * 5.5) + (total.kg18 * 11) + (total.kg21 * 13) + (total.kg27 * 16) + (total.kg43 * 24))}\$ / ${(((total.kg10 * 5.5) + (total.kg18 * 11) + (total.kg21 * 13) + (total.kg27 * 16) + (total.kg43 * 24)) * bcv).toStringAsFixed(2)} Bs.",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14,
@@ -311,7 +310,7 @@ class ResumeCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "Recibidos: ${((total.kg10 * 5) + (total.kg18 * 10) + (total.kg21 * 12) + (total.kg27 * 15) + (total.kg43 * 22))}\$ / ${(((total.kg10 * 5) + (total.kg18 * 10) + (total.kg21 * 12) + (total.kg27 * 15) + (total.kg43 * 22)) * bcv).toStringAsFixed(2)} Bs.",
+                        "Pagar: ${((total.kg10 * 5) + (total.kg18 * 10) + (total.kg21 * 12) + (total.kg27 * 15) + (total.kg43 * 22))}\$ / ${(((total.kg10 * 5) + (total.kg18 * 10) + (total.kg21 * 12) + (total.kg27 * 15) + (total.kg43 * 22)) * bcv).toStringAsFixed(2)} Bs.",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14,
@@ -370,3 +369,5 @@ OrdersDetailForm getOrderDetails(List<OrdersResponse> orders) {
     kg43: kg43,
   );
 }
+
+// arreglar hora en total week a la hora q esta en el estado escogida
