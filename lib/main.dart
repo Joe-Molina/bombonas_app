@@ -1,4 +1,4 @@
-import 'package:bombonas_app/screens/orders_screen.dart';
+import 'package:bombonas_app/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -10,6 +10,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: OrdersScreen());
+    return const MaterialApp(home: HomeScreen());
   }
 }
