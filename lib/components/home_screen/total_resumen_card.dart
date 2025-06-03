@@ -1,5 +1,6 @@
 import 'package:bombonas_app/components/order_card.dart';
 import 'package:bombonas_app/data/models/clients_response.dart';
+import 'package:bombonas_app/data/models/orders_response.dart';
 import 'package:bombonas_app/screens/orders_screen.dart';
 import 'package:bombonas_app/utils/same_day.dart';
 import 'package:bombonas_app/utils/sum_totals_orders_by_day.dart';
@@ -10,6 +11,7 @@ Padding totalResumenCard(
   TotalOrdersByDay data,
   double? bcv,
   List<ClientsResponse> clients,
+  Future<List<OrdersResponse>>? futureOrders,
 ) {
   return Padding(
     padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
@@ -17,8 +19,12 @@ Padding totalResumenCard(
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              OrdersScreen(bcvValue: bcv, orders: data, clients: clients),
+          builder: (context) => OrdersScreen(
+            futureOrders: futureOrders,
+            bcvValue: bcv,
+            orders: data,
+            clients: clients,
+          ),
         ),
       ),
       child: Container(

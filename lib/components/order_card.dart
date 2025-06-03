@@ -1,10 +1,16 @@
 import 'package:bombonas_app/data/models/orders_response.dart';
 import 'package:bombonas_app/screens/order_detail.dart';
+import 'package:bombonas_app/utils/same_day.dart';
+import 'package:bombonas_app/utils/sum_totals_orders_by_day.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 //unUsed
-FutureBuilder<List<OrdersResponse>> ordersList(ordenes, ordenesCargadas, bcv) {
+FutureBuilder<List<OrdersResponse>> ordersList(
+  Future<List<OrdersResponse>>? ordenes,
+  TotalOrdersByDay ordenesCargadas,
+  bcv,
+) {
   return FutureBuilder(
     future: ordenes,
     builder: (context, snapshot) {
@@ -16,13 +22,20 @@ FutureBuilder<List<OrdersResponse>> ordersList(ordenes, ordenesCargadas, bcv) {
           style: TextStyle(color: Colors.white),
         );
       } else if (snapshot.hasData) {
-        // var ordersList = snapshot.data;
+        var ordersList = snapshot.data!
+            .where(
+              (order) =>
+                  sameDay(DateTime.parse(order.date), ordenesCargadas.date),
+            )
+            .toList();
+
+        print(ordersList);
         return Expanded(
           child: ListView.builder(
-            itemCount: ordenesCargadas.length,
+            itemCount: ordersList.length,
             itemBuilder: (context, index) {
-              if (ordenesCargadas != null) {
-                return orderCard(ordenesCargadas[index], bcv, context);
+              if (ordersList != null) {
+                return orderCard(ordersList[index], bcv, context);
               } else {
                 return Text("Error");
               }

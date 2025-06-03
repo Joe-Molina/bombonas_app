@@ -4,9 +4,9 @@ import 'package:bombonas_app/screens/create_order_screen.dart';
 import 'package:bombonas_app/components/order_card.dart';
 import 'package:bombonas_app/data/models/orders_response.dart';
 import 'package:bombonas_app/screens/order_detail.dart';
+import 'package:bombonas_app/utils/same_day.dart';
 import 'package:bombonas_app/utils/sum_totals_orders_by_day.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class OrdersScreen extends StatefulWidget {
   final Future<List<OrdersResponse>>? futureOrders;
@@ -18,7 +18,7 @@ class OrdersScreen extends StatefulWidget {
     super.key,
     required this.bcvValue,
     // required this.selectedWeek,
-    this.futureOrders,
+    required this.futureOrders,
     required this.orders,
     required this.clients,
   });
@@ -115,7 +115,7 @@ class ResumeCard extends StatelessWidget {
                         children: [
                           Text("Total:", style: TextStyle(color: Colors.white)),
                           Text(
-                            DateFormat('dd/MM/yy').format(DateTime.now()),
+                            formatter(data.date),
                             style: TextStyle(fontSize: 12, color: Colors.white),
                           ),
                         ],

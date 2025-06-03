@@ -40,8 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
       _bcvValue = bcv;
     });
 
-    setState(() async {
-      _allClients = await Repository().fetchClients();
+    setState(() {
+      Future<List<ClientsResponse>> clientsRespose = Repository()
+          .fetchClients();
+      clientsRespose.then((clients) => {_allClients = clients});
     });
 
     _futureOrders!
@@ -144,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           spacing: 10,
                           children: [
                             Text(
-                              formatter(data.date),
+                              "${formatter(data.date)} / ${formatter(data.date.add(Duration(days: 4)))} ",
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.white,
@@ -234,6 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           bcv,
                           _allClients,
+                          _futureOrders,
                         );
                       } else {
                         return Text("Error");
