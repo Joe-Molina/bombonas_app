@@ -77,7 +77,7 @@ Padding totalResumenCard(
                         ),
                       ),
                       Text(
-                        "Pagar: ${((data.cant10 * 5) + (data.cant18 * 10) + (data.cant21 * 12) + (data.cant27 * 15) + (data.cant43 * 22))}\$ / ${(((data.cant10 * 5) + (data.cant18 * 10) + (data.cant21 * 12) + (data.cant27 * 15) + (data.cant43 * 22)) * bcv!).toStringAsFixed(2)} Bs.",
+                        "Pagar: ${((data.cant10 * 5) + (data.cant18 * 10) + (data.cant21 * 12) + (data.cant27 * 15) + (data.cant43 * 22))}\$ / ${(((data.cant10 * 5) + (data.cant18 * 10) + (data.cant21 * 12) + (data.cant27 * 15) + (data.cant43 * 22)) * bcv).toStringAsFixed(2)} Bs.",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14,

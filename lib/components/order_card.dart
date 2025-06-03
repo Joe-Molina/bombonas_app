@@ -34,11 +34,7 @@ FutureBuilder<List<OrdersResponse>> ordersList(
           child: ListView.builder(
             itemCount: ordersList.length,
             itemBuilder: (context, index) {
-              if (ordersList != null) {
-                return orderCard(ordersList[index], bcv, context);
-              } else {
-                return Text("Error");
-              }
+              return orderCard(ordersList[index], bcv, context);
             },
           ),
         );
