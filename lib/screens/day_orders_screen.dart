@@ -1,38 +1,34 @@
 import 'package:bombonas_app/components/app_bar.dart';
 import 'package:bombonas_app/data/models/clients_response.dart';
-import 'package:bombonas_app/screens/create_order_screen.dart';
 import 'package:bombonas_app/components/order_card.dart';
 import 'package:bombonas_app/data/models/orders_response.dart';
-import 'package:bombonas_app/screens/order_detail.dart';
+import 'package:bombonas_app/screens/home_screen.dart';
+import 'package:bombonas_app/screens/week_orders_screen.dart';
 import 'package:bombonas_app/utils/same_day.dart';
 import 'package:bombonas_app/utils/sum_totals_orders_by_day.dart';
 import 'package:flutter/material.dart';
 
-class OrdersScreen extends StatefulWidget {
+class OrdersDayScreen extends StatefulWidget {
   final Future<List<OrdersResponse>>? futureOrders;
   final TotalOrdersByDay orders;
-  final List<ClientsResponse> clients;
-  // final DateTime selectedWeek;
   final double bcvValue;
-  const OrdersScreen({
+  const OrdersDayScreen({
     super.key,
     required this.bcvValue,
-    // required this.selectedWeek,
     required this.futureOrders,
     required this.orders,
-    required this.clients,
   });
 
   @override
-  State<OrdersScreen> createState() => _OrdersScreenState();
+  State<OrdersDayScreen> createState() => _OrdersScreenState();
 }
 
-class _OrdersScreenState extends State<OrdersScreen> {
+class _OrdersScreenState extends State<OrdersDayScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 39, 39, 39),
-      appBar: appBarComponent("Ordenes"),
+      appBar: appBarComponent("Ordenes ${formatter(widget.orders.date)}"),
       body: Column(
         children: [
           ResumeCard(
@@ -42,22 +38,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
           ),
           ordersList(widget.futureOrders, widget.orders, widget.bcvValue),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.black,
-        onPressed: () async {
-          final result = await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CreateOrderScreen(clients: widget.clients),
-            ),
-          );
-
-          if (result is bool) {
-            // _loadOrders(); cambiar por el método que recargue los datos o sea un setState
-          }
-        },
-        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
@@ -77,11 +57,11 @@ class ResumeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+    padding: const EdgeInsets.only(left: 4, right: 4, top: 8, bottom: 1),
     child: GestureDetector(
       onTap: () => Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => OrderDetailScreen()),
+        MaterialPageRoute(builder: (context) => HomeScreen()),
       ),
       child: Container(
         decoration: BoxDecoration(
@@ -134,7 +114,7 @@ class ResumeCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "Pagado: ${((data.cant10 * 5) + (data.cant18 * 10) + (data.cant21 * 12) + (data.cant27 * 15) + (data.cant43 * 22))}\$ / ${(((data.cant10 * 5) + (data.cant18 * 10) + (data.cant21 * 12) + (data.cant27 * 15) + (data.cant43 * 22)) * bcv).toStringAsFixed(2)} Bs.",
+                        "Factura: ${((data.cant10 * 4) + (data.cant18 * 10) + (data.cant21 * 12) + (data.cant27 * 12) + (data.cant43 * 20))}\$ / ${(((data.cant10 * 5) + (data.cant18 * 10) + (data.cant21 * 12) + (data.cant27 * 15) + (data.cant43 * 22)) * bcv).toStringAsFixed(2)} Bs.",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14,

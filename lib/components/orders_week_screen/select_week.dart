@@ -23,12 +23,6 @@ class _SelectWeekState extends State<SelectWeek> {
 
   final formGlobalKey = GlobalKey<FormState>();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   widget.setSelectedWeek(getLastFourWeeksDays().first);
-  // }
-
   @override
   Widget build(BuildContext context) {
     return selectWeek();
@@ -57,7 +51,6 @@ class _SelectWeekState extends State<SelectWeek> {
               (week) => DropdownMenuItem<DateTime>(
                 value: week,
                 child: Text(
-                  // "${formatter(week)} / ${formatter(week.add(Duration(days: 4)))}",
                   "${formatter(week)} / ${formatter(week.add(Duration(days: 4)))}",
                   style: const TextStyle(color: Colors.white),
                 ),

@@ -1,9 +1,7 @@
 import 'package:bombonas_app/data/models/orders_response.dart';
-import 'package:bombonas_app/screens/order_detail.dart';
 import 'package:bombonas_app/utils/same_day.dart';
 import 'package:bombonas_app/utils/sum_totals_orders_by_day.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 //unUsed
 FutureBuilder<List<OrdersResponse>> ordersList(
@@ -28,8 +26,6 @@ FutureBuilder<List<OrdersResponse>> ordersList(
                   sameDay(DateTime.parse(order.date), ordenesCargadas.date),
             )
             .toList();
-
-        print(ordersList);
         return Expanded(
           child: ListView.builder(
             itemCount: ordersList.length,
@@ -46,16 +42,16 @@ FutureBuilder<List<OrdersResponse>> ordersList(
 }
 
 Padding orderCard(OrdersResponse order, double bcv, context) => Padding(
-  padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+  padding: const EdgeInsets.only(left: 4, right: 4, top: 1, bottom: 1),
   child: GestureDetector(
-    onTap: () => Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => OrderDetailScreen()),
-    ),
+    // onTap: () => Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => HomeScreen()),
+    // ),
     child: Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
-        color: const Color.fromARGB(255, 20, 20, 20),
+        color: const Color.fromARGB(153, 0, 0, 0),
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -70,7 +66,7 @@ Padding orderCard(OrdersResponse order, double bcv, context) => Padding(
                   decoration: BoxDecoration(
                     // border: Border.all(color: Colors.white, width: .5)
                     borderRadius: BorderRadius.circular(10.0),
-                    color: Colors.black,
+                    color: const Color.fromARGB(255, 53, 53, 53),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.only(
@@ -86,12 +82,12 @@ Padding orderCard(OrdersResponse order, double bcv, context) => Padding(
                           order.client.name,
                           style: TextStyle(color: Colors.white),
                         ),
-                        Text(
-                          DateFormat(
-                            'dd/MM/yy',
-                          ).format(DateTime.parse(order.date)),
-                          style: TextStyle(fontSize: 12, color: Colors.white),
-                        ),
+                        // Text(
+                        //   DateFormat(
+                        //     'dd/MM/yy',
+                        //   ).format(DateTime.parse(order.date)),
+                        //   style: TextStyle(fontSize: 12, color: Colors.white),
+                        // ),
                       ],
                     ),
                   ),
@@ -107,7 +103,7 @@ Padding orderCard(OrdersResponse order, double bcv, context) => Padding(
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               spacing: 10,
               children: [
                 Row(
@@ -141,18 +137,23 @@ Container cantCilindros(String kg, int cantidad, double precio) {
     decoration: BoxDecoration(
       // border: Border.all(color: Colors.white, width: .5)
       borderRadius: BorderRadius.circular(5.0),
-      color: Colors.grey[900],
+      // color: Colors.grey[900],
     ),
     child: Padding(
       padding: const EdgeInsets.all(4.0),
       child: Column(
         children: [
-          Text(kg, style: TextStyle(color: Colors.white)),
           Text(
-            "$cantidad ${cantidad * precio > 0 ? "/ ${formatDouble(cantidad * precio)}\$" : ""}",
-            style: TextStyle(color: Colors.white),
+            "${formatDouble(cantidad * precio)}\$",
+            style: TextStyle(color: Colors.white, fontSize: 14),
           ),
-          // Text("", style: TextStyle(color: Colors.white)),
+          Text(
+            "$cantidad ${cantidad * precio > 0 ? "/ $kg" : ""}",
+            style: TextStyle(
+              color: const Color.fromARGB(255, 104, 104, 105),
+              fontSize: 12,
+            ),
+          ),
         ],
       ),
     ),
