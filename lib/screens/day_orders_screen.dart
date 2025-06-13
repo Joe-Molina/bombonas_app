@@ -1,9 +1,7 @@
 import 'package:bombonas_app/components/app_bar.dart';
-import 'package:bombonas_app/data/models/clients_response.dart';
 import 'package:bombonas_app/components/order_card.dart';
 import 'package:bombonas_app/data/models/orders_response.dart';
 import 'package:bombonas_app/screens/home_screen.dart';
-import 'package:bombonas_app/screens/week_orders_screen.dart';
 import 'package:bombonas_app/utils/same_day.dart';
 import 'package:bombonas_app/utils/sum_totals_orders_by_day.dart';
 import 'package:flutter/material.dart';
@@ -114,7 +112,7 @@ class ResumeCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "Factura: ${((data.cant10 * 4) + (data.cant18 * 10) + (data.cant21 * 12) + (data.cant27 * 12) + (data.cant43 * 20))}\$ / ${(((data.cant10 * 5) + (data.cant18 * 10) + (data.cant21 * 12) + (data.cant27 * 15) + (data.cant43 * 22)) * bcv).toStringAsFixed(2)} Bs.",
+                        "Factura: ${((data.cant10 * 4) + (data.cant18 * 10) + (data.cant21 * 12) + (data.cant27 * 12) + (data.cant43 * 20))}\$ / ${(((data.cant10 * 4) + (data.cant18 * 10) + (data.cant21 * 12) + (data.cant27 * 12) + (data.cant43 * 20)) * bcv).toStringAsFixed(2)} Bs.",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14,
