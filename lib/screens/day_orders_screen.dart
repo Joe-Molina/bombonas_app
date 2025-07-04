@@ -1,7 +1,9 @@
 import 'package:bombonas_app/components/app_bar.dart';
 import 'package:bombonas_app/components/order_card.dart';
+import 'package:bombonas_app/components/relacion_dolar_boilvares_in_card.dart';
 import 'package:bombonas_app/data/models/orders_response.dart';
 import 'package:bombonas_app/screens/home_screen.dart';
+import 'package:bombonas_app/utils/precios.dart';
 import 'package:bombonas_app/utils/same_day.dart';
 import 'package:bombonas_app/utils/sum_totals_orders_by_day.dart';
 import 'package:flutter/material.dart';
@@ -102,23 +104,10 @@ class ResumeCard extends StatelessWidget {
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
+                    spacing: 3,
                     children: [
-                      Text(
-                        "Recibido: ${((data.cant10 * 5.5) + (data.cant18 * 11) + (data.cant21 * 13) + (data.cant27 * 16) + (data.cant43 * 24))}\$ / ${(((data.cant10 * 5.5) + (data.cant18 * 11) + (data.cant21 * 13) + (data.cant27 * 16) + (data.cant43 * 24)) * bcv).toStringAsFixed(2)} Bs.",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(
-                        "Factura: ${((data.cant10 * 4) + (data.cant18 * 10) + (data.cant21 * 12) + (data.cant27 * 12) + (data.cant43 * 20))}\$ / ${(((data.cant10 * 4) + (data.cant18 * 10) + (data.cant21 * 12) + (data.cant27 * 12) + (data.cant43 * 20)) * bcv).toStringAsFixed(2)} Bs.",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      relacionDolarBs(data, bcv, Colors.green, preciosVenta),
+                      relacionDolarBs(data, bcv, Colors.red, preciosCorigas),
                     ],
                   ),
                 ],
@@ -127,11 +116,31 @@ class ResumeCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 spacing: 10,
                 children: [
-                  Row(children: [cantCilindros("10kg", data.cant10, 5.5)]),
-                  Row(children: [cantCilindros("18kg", data.cant18, 11)]),
-                  Row(children: [cantCilindros("21kg", data.cant21, 13)]),
-                  Row(children: [cantCilindros("27kg", data.cant27, 16)]),
-                  Row(children: [cantCilindros("43kg", data.cant43, 24)]),
+                  Row(
+                    children: [
+                      cantCilindros("10kg", data.cant10, preciosVenta[0]),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      cantCilindros("18kg", data.cant18, preciosVenta[1]),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      cantCilindros("21kg", data.cant21, preciosVenta[2]),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      cantCilindros("27kg", data.cant27, preciosVenta[3]),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      cantCilindros("43kg", data.cant43, preciosVenta[4]),
+                    ],
+                  ),
                 ],
               ),
             ],

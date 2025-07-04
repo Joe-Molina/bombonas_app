@@ -41,7 +41,7 @@ class FormOrder {
       'date': date
           .toUtc()
           .toIso8601String(), // Si es DateTime: date.toIso8601String()
-      'orderDetail': orderDetail.toJson(), // Usa el toJson() del detalle
+      'OrderDetail': orderDetail.toJson(), // Usa el toJson() del detalle
     };
   }
 }

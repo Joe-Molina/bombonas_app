@@ -17,7 +17,7 @@ class CreateOrderScreen extends StatefulWidget {
 
 class _CreateOrderScreenState extends State<CreateOrderScreen> {
   List<ClientsResponse> _clients = [];
-  DateTime? _selectedDate;
+  DateTime _selectedDate = DateTime.now();
   int selectedClient = 0;
   FormOrder? formOrderState;
   //form key
@@ -26,7 +26,6 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _kg10Controller = TextEditingController();
   final TextEditingController _kg18Controller = TextEditingController();
-  final TextEditingController _kg21Controller = TextEditingController();
   final TextEditingController _kg27Controller = TextEditingController();
   final TextEditingController _kg43Controller = TextEditingController();
 
@@ -62,7 +61,6 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                       children: [
                         inputCantCilindros(_kg10Controller, "Cantidad 10 kg"),
                         inputCantCilindros(_kg18Controller, "Cantidad 18 kg"),
-                        inputCantCilindros(_kg21Controller, "Cantidad 21 kg"),
                         inputCantCilindros(_kg27Controller, "Cantidad 27 kg"),
                         inputCantCilindros(_kg43Controller, "Cantidad 43 kg"),
                       ],
@@ -86,9 +84,9 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
       style: const TextStyle(color: Colors.white),
       decoration: inputStyle("Fecha de la orden"),
       validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Por favor, selecciona una fecha.';
-        }
+        // if (value == null || value.isEmpty) {
+        //   return 'Por favor, selecciona una fecha.';
+        // }
         return null;
       },
     );
@@ -102,11 +100,11 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
 
           final order = FormOrder(
             clientId: selectedClient,
-            date: _selectedDate!,
+            date: _selectedDate,
             orderDetail: OrdersDetailForm(
               kg10: int.parse(_kg10Controller.text),
               kg18: int.parse(_kg18Controller.text),
-              kg21: int.parse(_kg21Controller.text),
+              kg21: int.parse(_kg27Controller.text),
               kg27: int.parse(_kg27Controller.text),
               kg43: int.parse(_kg43Controller.text),
             ),
@@ -191,7 +189,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
       maxLength: 3,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return "debes ingresar una cantidad de cilindros";
+          controller.text = "0";
         }
         return null;
       },
@@ -233,7 +231,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
       setState(() {
         _selectedDate = picked;
         // Formatear la fecha para mostrarla en el TextFormField
-        _dateController.text = DateFormat('dd/MM/yyyy').format(_selectedDate!);
+        _dateController.text = DateFormat('dd/MM/yyyy').format(_selectedDate);
       });
     }
   }

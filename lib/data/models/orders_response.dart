@@ -5,6 +5,7 @@ class OrdersResponse {
   final String date;
   final int clientId;
   final ClientResponse client;
+  final bool payment;
   final OrdersDetailResponse orderDetail;
 
   OrdersResponse({
@@ -13,6 +14,7 @@ class OrdersResponse {
     required this.clientId,
     required this.client,
     required this.orderDetail,
+    required this.payment,
   });
 
   factory OrdersResponse.fromJson(Map<String, dynamic> json) {
@@ -20,8 +22,9 @@ class OrdersResponse {
       id: json["id"],
       date: json["date"],
       clientId: json["clientId"],
-      client: ClientResponse.fromJson(json["client"]),
-      orderDetail: OrdersDetailResponse.fromJson(json["orderDetail"][0]),
+      payment: json["payment"],
+      client: ClientResponse.fromJson(json["Client"]),
+      orderDetail: OrdersDetailResponse.fromJson(json["OrderDetail"][0]),
     );
   }
 

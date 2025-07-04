@@ -5,7 +5,6 @@ import 'package:bombonas_app/data/models/clients_response.dart';
 import 'package:bombonas_app/data/models/orders_response.dart';
 import 'package:bombonas_app/data/repository.dart';
 import 'package:bombonas_app/screens/create_order_screen.dart';
-import 'package:bombonas_app/screens/week_orders_screen.dart';
 import 'package:bombonas_app/utils/last_four_weeks.dart';
 import 'package:bombonas_app/utils/sum_totals_orders_by_day.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  DateTime _selectedWeek = getLastFourWeeksDays().first;
+  DateTime _selectedWeek = getLastFourWeeksDays().last;
   List<ClientsResponse> _allClients = [];
 
   Future<List<OrdersResponse>>? _futureOrders;
@@ -139,31 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
         );
 
         if (result is bool) {
-          // _loadOrders(); cambiar por el método que recargue los datos o sea un setState
-        }
-      },
-      child: const Icon(Icons.add, color: Colors.white),
-    );
-  }
-
-  FloatingActionButton btnCrearOrden2(BuildContext context) {
-    return FloatingActionButton(
-      backgroundColor: Colors.black,
-      onPressed: () async {
-        final result = await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => OrdersWeekScreen(
-              futureOrders: _futureOrders,
-              allOrders: _allOrders,
-              selectedWeek: _selectedWeek,
-              bcvValue: _bcvValue!.price,
-            ),
-          ),
-        );
-
-        if (result is bool) {
-          // _loadOrders(); cambiar por el método que recargue los datos o sea un setState
+          loadData();
         }
       },
       child: const Icon(Icons.add, color: Colors.white),

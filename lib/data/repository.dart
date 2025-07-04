@@ -55,4 +55,16 @@ class Repository {
       ), // Asegúrate de tener toJson() en FormOrder
     );
   }
+
+  Future<http.Response> updatePaidOrder(int id, bool paid) async {
+    String url = paid
+        ? "$baseUrl/orders/notpaid/$id"
+        : "$baseUrl/orders/paid/$id";
+    return await http.patch(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+  }
 }
