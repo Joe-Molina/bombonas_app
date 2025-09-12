@@ -1,60 +1,21 @@
 import 'package:bombonas_app/components/relacion_dolar_boilvares_in_card.dart';
 import 'package:bombonas_app/data/models/orders_response.dart';
+import 'package:bombonas_app/presentation/providers/providers.dart';
 import 'package:bombonas_app/utils/actualizar_pago.dart';
-import 'package:bombonas_app/utils/eliminar_orden.dart';
 import 'package:bombonas_app/utils/precios.dart';
-import 'package:bombonas_app/utils/same_day.dart';
-import 'package:bombonas_app/utils/sum_totals_orders_by_day.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-//unUsed
-FutureBuilder<List<OrdersResponse>> ordersList(
-  Future<List<OrdersResponse>>? ordenes,
-  TotalOrdersByDay ordenesCargadas,
-  bcv,
-) {
-  return FutureBuilder(
-    future: ordenes,
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return CircularProgressIndicator();
-      } else if (snapshot.hasError) {
-        return Text(
-          "Error: ${snapshot.error}",
-          style: TextStyle(color: Colors.white),
-        );
-      } else if (snapshot.hasData) {
-        var ordersList = snapshot.data!
-            .where(
-              (order) =>
-                  sameDay(DateTime.parse(order.date), ordenesCargadas.date),
-            )
-            .toList();
-        return Expanded(
-          child: ListView.builder(
-            itemCount: ordersList.length,
-            itemBuilder: (context, index) {
-              return OrderCard(order: ordersList[index], bcv: bcv);
-            },
-          ),
-        );
-      } else {
-        return Text("no hay resultados");
-      }
-    },
-  );
-}
-
-class OrderCard extends StatefulWidget {
+class OrderCard extends ConsumerStatefulWidget {
   const OrderCard({super.key, required this.order, required this.bcv});
   final OrdersResponse order;
   final double bcv;
 
   @override
-  State<OrderCard> createState() => _OrderCardState();
+  ConsumerState<OrderCard> createState() => _OrderCardState();
 }
 
-class _OrderCardState extends State<OrderCard> {
+class _OrderCardState extends ConsumerState<OrderCard> {
   bool paid = false;
   @override
   void initState() {
@@ -79,16 +40,60 @@ class _OrderCardState extends State<OrderCard> {
           }
         },
         onLongPress: () async {
-          bool result = await deleteOrder(context, order.id);
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 32, 32, 32),
+                ),
+                child: SafeArea(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        leading: const Icon(Icons.delete, color: Colors.white),
+                        title: const Text(
+                          'Eliminar esta orden',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onTap: () async {
+                          // Espera a que la función asíncrona termine y obtén el resultado.
+                          final bool isDeleted = await ref
+                              .read(ordersProvider.notifier)
+                              .deleteOrder(order.id);
 
-          if (result) {
-            // aca los eliminamos con algun estado heredado
-            // ignore: use_build_context_synchronously
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Orden ${order.id} eliminada con éxito.')),
-            );
-            // Aquí pones tu lógica para borrar la orden de la base de datos, etc.
-          }
+                          // Es buena práctica verificar si el widget sigue "montado" (visible)
+                          // antes de intentar usar su `context`.
+                          if (context.mounted) {
+                            if (isDeleted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Orden ${order.id} eliminada con éxito.',
+                                  ),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Orden ${order.id} no se pudo eliminar',
+                                  ),
+                                ),
+                              );
+                            }
+                            // Opcional: Podrías añadir un `else` para mostrar un error si no se pudo borrar.
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+          // Aquí pones tu lógica para borrar la orden de la base de datos, etc.
         },
         child: Container(
           decoration: BoxDecoration(

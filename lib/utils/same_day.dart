@@ -17,3 +17,7 @@ bool isInWeek(List<DateTime> weekDays, DateTime date) {
 String formatter(DateTime date) {
   return DateFormat('yyyy-MM-dd').format(date);
 }
+
+String formatterWithOutDay(DateTime date) {
+  return DateFormat('yyyy-MM').format(date);
+}

@@ -4,6 +4,6 @@ class BcvResponse {
   BcvResponse({required this.price});
 
   factory BcvResponse.fromJson(Map<String, dynamic> json) {
-    return BcvResponse(price: json["price"]);
+    return BcvResponse(price: json["promedio"]);
   }
 }

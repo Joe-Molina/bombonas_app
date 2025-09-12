@@ -1,12 +1,10 @@
 import 'package:bombonas_app/components/orders_week_screen/select_week.dart';
 import 'package:bombonas_app/components/resume_week_card.dart';
-import 'package:bombonas_app/data/models/bcv_response.dart';
 import 'package:bombonas_app/data/models/clients_response.dart';
 import 'package:bombonas_app/data/models/orders_response.dart';
 import 'package:bombonas_app/data/repository.dart';
 import 'package:bombonas_app/screens/create_order_screen.dart';
 import 'package:bombonas_app/utils/last_four_weeks.dart';
-import 'package:bombonas_app/utils/sum_totals_orders_by_day.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,8 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<List<OrdersResponse>>? _futureOrders;
   List<OrdersResponse> _allOrders = [];
 
-  BcvResponse? _bcvValue;
-
   void _setSelectedWeek(newOrders) {
     setState(() {
       _selectedWeek = newOrders;
@@ -33,12 +29,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void loadData() async {
     _futureOrders = Repository().fetchOrders();
-
-    BcvResponse bcv = await Repository().fetchBcv();
-
-    setState(() {
-      _bcvValue = bcv;
-    });
 
     _futureOrders!
         .then(
@@ -92,33 +82,10 @@ class _HomeScreenState extends State<HomeScreen> {
               selectedWeek: _selectedWeek,
             ),
           ),
-          FutureBuilder(
-            future: _futureOrders,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text(
-                  "Error: ${snapshot.error}",
-                  style: TextStyle(color: Colors.white),
-                );
-              } else if (snapshot.hasData) {
-                // var ordersList = snapshot.data;
-                return ResumeCardWeek(
-                  context: context,
-                  data: calculateTotalByWeek(
-                    filterOrdersByWeek(_allOrders, _selectedWeek),
-                    _selectedWeek,
-                  ),
-                  bcv: _bcvValue?.price ?? 0,
-                  allOrders: _allOrders,
-                  selectedWeek: _selectedWeek,
-                  futureOrders: _futureOrders,
-                );
-              } else {
-                return Text("no hay resultados");
-              }
-            },
+          ResumeCardWeek(
+            context: context,
+            selectedWeek: _selectedWeek,
+            futureOrders: _futureOrders,
           ),
         ],
       ),

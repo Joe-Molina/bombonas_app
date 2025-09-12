@@ -2,20 +2,22 @@ import 'package:bombonas_app/components/app_bar.dart';
 import 'package:bombonas_app/data/models/clients_response.dart';
 import 'package:bombonas_app/data/models/form_post.dart';
 import 'package:bombonas_app/data/repository.dart';
+import 'package:bombonas_app/presentation/providers/orders.dart';
 import 'package:bombonas_app/styles/input_decoration.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class CreateOrderScreen extends StatefulWidget {
+class CreateOrderScreen extends ConsumerStatefulWidget {
   final List<ClientsResponse> clients;
 
   const CreateOrderScreen({super.key, required this.clients});
 
   @override
-  State<CreateOrderScreen> createState() => _CreateOrderScreenState();
+  ConsumerState<CreateOrderScreen> createState() => _CreateOrderScreenState();
 }
 
-class _CreateOrderScreenState extends State<CreateOrderScreen> {
+class _CreateOrderScreenState extends ConsumerState<CreateOrderScreen> {
   List<ClientsResponse> _clients = [];
   DateTime _selectedDate = DateTime.now();
   int selectedClient = 0;
@@ -120,6 +122,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Orden creada exitosamente')),
               );
+              // aca va el reload
+              ref.watch(ordersProvider.notifier).reloadOrders();
               Navigator.pop(context, true);
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -200,8 +204,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate:
-          _selectedDate ?? DateTime.now(), // Fecha inicial al abrir el picker
+      initialDate: _selectedDate, // Fecha inicial al abrir el picker
       firstDate: DateTime(2000), // Fecha mínima permitida
       lastDate: DateTime(2101), // Fecha máxima permitida
       helpText: 'Selecciona una fecha', // Título en el picker

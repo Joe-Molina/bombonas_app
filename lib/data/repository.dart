@@ -34,11 +34,11 @@ class Repository {
 
   Future<BcvResponse> fetchBcv() async {
     final response = await http.get(
-      Uri.parse("https://pydolarve.org/api/v1/dollar?page=bcv&monitor=usd"),
+      Uri.parse("https://ve.dolarapi.com/v1/dolares"),
     );
 
     if (response.statusCode == 200) {
-      var json = jsonDecode(response.body);
+      var json = jsonDecode(response.body)[0];
       BcvResponse bcvResponse = BcvResponse.fromJson(json);
       return bcvResponse;
     } else {
@@ -54,6 +54,19 @@ class Repository {
         order.toJson(),
       ), // Asegúrate de tener toJson() en FormOrder
     );
+  }
+
+  Future<bool> deleteOrder(int orderId) async {
+    final response = await http.delete(
+      Uri.parse('$baseUrl/orders/delete/$orderId'),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('fallo al cargar');
+    }
   }
 
   Future<http.Response> updatePaidOrder(int id, bool paid) async {
