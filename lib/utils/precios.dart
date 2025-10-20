@@ -1,3 +1,3 @@
-List<double> preciosVenta = [5.5, 11, 14, 14, 22];
+List<double> preciosVenta = [5, 10, 13, 13, 21];
 
-List<double> preciosCorigas = [4, 8, 12, 12, 15];
+List<double> preciosCorigas = [3, 7, 10, 10, 15];

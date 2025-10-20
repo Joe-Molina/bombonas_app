@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class Repository {
-  String baseUrl = "https://api-cilindros.onrender.com";
+  String baseUrl = "https://api.gas.jodomodev.com";
 
   Future<List<OrdersResponse>> fetchOrders() async {
     final response = await http.get(Uri.parse("$baseUrl/orders/get/all"));
